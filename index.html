@@ -1,1 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Capmatic - Complete Packaging Machinery & Robotic Solutions Platform">
+    <meta name="theme-color" content="#0a0a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Capmatic Platform">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Icons -->
+    <link rel="icon" href="images/capmatic.png">
+    <link rel="apple-touch-icon" href="images/capmatic.png">
+    
+    <title>Capmatic - Complete Packaging Solutions</title>
+    
+    <!-- Styles & Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #00f7ff;
+            --secondary-color: #ff00d6;
+            --accent-color: #00ff88;
+            --text-color: #ffffff;
+            --dark-bg: #0a0a1a;
+            --card-bg: rgba(20, 20, 50, 0.92);
+            --padding-small: 12px;
+            --padding-medium: 20px;
+            --padding-large: 25px;
+            --section-spacing: 80px;
+        }
 
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            height: 100%;
+            background: var(--dark-bg);
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: var(--dark-bg);
+            min-height: 100vh;
+            color: var(--text-color);
+            line-height: 1.5;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Cyber Background Effects */
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 247, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 214, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                var(--dark-bg);
+            z-index: -3;
+        }
+
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 247, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 247, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            opacity: 0.3;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Navigation */
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: var(--padding-small);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 30, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(0, 247, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        .language-switcher {
+            display: flex;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .lang-btn {
+            background: none;
+            border: 1px solid var(--primary-color);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active {
+            background: var(--primary-color);
+            color: var(--dark-bg);
+        }
+
+        /* Sections */
+        .section {
+            min-height: 100vh;
+            padding: 100px var(--padding-medium) var(--padding-large);
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .section-title {
+            text-align: center;
+            color: transparent;
+            font-size: 3em;
+            margin-bottom: var(--padding-large);
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 900;
+        }
+
+        /* Business Card Section */
+        .business-card {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: var(--padding-large);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 40px rgba(0, 247, 255, 0.5);
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--padding-large);
+            margin-top: var(--padding-large);
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: var(--padding-medium);
+            border: 2px solid var(--primary-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 247, 255, 0.3);
+        }
+
+        /* Team Grid */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--padding-medium);
+            margin-top: var(--padding-large);
+        }
+
+        .team-member {
+            text-align: center;
+            background: var(--card-bg);
+            padding: var(--padding-medium);
+            border-radius: 15px;
+            border: 2px solid var(--accent-color);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: var(--padding-large) auto;
+        }
+
+        .timeline-item {
+            background: var(--card-bg);
+            padding: var(--padding-medium);
+            margin: var(--padding-medium) 0;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        /* Analytics Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--padding-medium);
+            margin: var(--padding-large) 0;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: var(--padding-medium);
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid var(--secondary-color);
+        }
+
+        /* QR Code Section */
+        .qr-section {
+            text-align: center;
+            margin: var(--padding-large) 0;
+        }
+
+        #qrcode {
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
+        /* Install Prompt */
+        .install-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--dark-bg);
+            padding: 15px 25px;
+            border-radius: 25px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            z-index: 10000;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .section-title {
+                font-size: 2em;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cyber Background -->
+    <div class="cyber-bg"></div>
+    <div class="cyber-grid"></div>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="logo">
+            <div class="logo-img">C</div>
+            <div class="logo-text">CAPMATIC PLATFORM</div>
+        </div>
+        
+        <div class="nav-links">
+            <div class="nav-link active" data-section="business-card">Business Card</div>
+            <div class="nav-link" data-section="products">Products</div>
+            <div class="nav-link" data-section="team">Our Team</div>
+            <div class="nav-link" data-section="portfolio">Portfolio</div>
+            <div class="nav-link" data-section="timeline">History</div>
+            <div class="nav-link" data-section="analytics">Analytics</div>
+            <div class="nav-link" data-section="tools">Tools</div>
+            
+            <div class="language-switcher">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="fr">FR</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Install Prompt -->
+    <div class="install-prompt" id="installPrompt">
+        <i class="fas fa-download"></i>
+        <span>Install Capmatic Platform</span>
+        <button id="installBtn">INSTALL</button>
+    </div>
+
+    <!-- SECTION 1: Business Card -->
+    <section id="business-card" class="section active">
+        <h2 class="section-title">DANIEL GAUDREAULT</h2>
+        <div class="business-card">
+            <!-- Your existing business card content here -->
+            <div class="profile">
+                <div class="profile-img">DG</div>
+                <h1 class="profile-name">DANIEL GAUDREAULT</h1>
+                <div class="profile-title">SENIOR SOLUTIONS ARCHITECT</div>
+            </div>
+            
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="contact-info">
+                        <div class="contact-label">EMAIL</div>
+                        <a href="mailto:dgaudreault@capmatic.com" class="contact-value">dgaudreault@capmatic.com</a>
+                    </div>
+                </div>
+                <!-- Add other contact items -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: Products Showcase -->
+    <section id="products" class="section">
+        <h2 class="section-title">OUR SOLUTIONS</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <h3>Automated Packaging Lines</h3>
+                <p>Complete turnkey packaging solutions</p>
+                <div class="product-features">
+                    <span class="feature-tag">High-Speed</span>
+                    <span class="feature-tag">Customizable</span>
+                </div>
+            </div>
+            <div class="product-card">
+                <h3>Robotic Palletizing</h3>
+                <p>Advanced robotic systems for efficient material handling</p>
+                <div class="product-features">
+                    <span class="feature-tag">Precision</span>
+                    <span class="feature-tag">24/7 Operation</span>
+                </div>
+            </div>
+            <!-- Add more product cards -->
+        </div>
+    </section>
+
+    <!-- SECTION 3: Team Directory -->
+    <section id="team" class="section">
+        <h2 class="section-title">OUR TEAM</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="member-photo"></div>
+                <h3>Daniel Gaudreault</h3>
+                <p>Senior Solutions Architect</p>
+                <div class="member-contact">
+                    <button class="contact-btn">Contact</button>
+                </div>
+            </div>
+            <!-- Add more team members -->
+        </div>
+    </section>
+
+    <!-- SECTION 4: Project Portfolio -->
+    <section id="portfolio" class="section">
+        <h2 class="section-title">SUCCESS STORIES</h2>
+        <div class="portfolio-grid">
+            <!-- Project showcase with images and details -->
+        </div>
+    </section>
+
+    <!-- SECTION 5: Company Timeline -->
+    <section id="timeline" class="section">
+        <h2 class="section-title">OUR JOURNEY</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h3>2005 - Foundation</h3>
+                <p>Capmatic was established with a vision for innovative packaging solutions</p>
+            </div>
+            <div class="timeline-item">
+                <h3>2010 - Robotics Division</h3>
+                <p>Expanded into robotic automation systems</p>
+            </div>
+            <!-- Add more timeline items -->
+        </div>
+    </section>
+
+    <!-- SECTION 6: Analytics Dashboard -->
+    <section id="analytics" class="section">
+        <h2 class="section-title">BUSINESS INSIGHTS</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Projects Completed</h3>
+                <div class="stat-number">247</div>
+            </div>
+            <div class="stat-card">
+                <h3>Happy Clients</h3>
+                <div class="stat-number">89%</div>
+            </div>
+            <!-- Add more stats -->
+        </div>
+    </section>
+
+    <!-- SECTION 7: Tools & Utilities -->
+    <section id="tools" class="section">
+        <h2 class="section-title">BUSINESS TOOLS</h2>
+        
+        <!-- QR Code Generator -->
+        <div class="qr-section">
+            <h3>Digital Business Card</h3>
+            <p>Scan to save contact information</p>
+            <div id="qrcode"></div>
+            <button onclick="downloadQRCode()" class="action-btn">
+                <i class="fas fa-download"></i> Download QR Code
+            </button>
+        </div>
+
+        <!-- VCard Download -->
+        <div class="tool-section">
+            <h3>Save to Contacts</h3>
+            <button onclick="downloadVCard()" class="action-btn">
+                <i class="fas fa-address-card"></i> Download vCard
+            </button>
+        </div>
+
+        <!-- Meeting Scheduler -->
+        <div class="tool-section">
+            <h3>Schedule a Meeting</h3>
+            <button onclick="scheduleMeeting()" class="action-btn">
+                <i class="fas fa-calendar-alt"></i> Book Appointment
+            </button>
+        </div>
+    </section>
+
+    <script>
+        // Navigation System
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.section');
+        const langButtons = document.querySelectorAll('.lang-btn');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                const targetSection = link.getAttribute('data-section');
+                
+                // Update active nav link
+                navLinks.forEach(nl => nl.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Show target section
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === targetSection) {
+                        setTimeout(() => section.classList.add('active'), 50);
+                    }
+                });
+            });
+        });
+
+        // Language System
+        let currentLanguage = 'en';
+        const translations = {
+            en: {
+                'business-card': 'Business Card',
+                'products': 'Products',
+                'team': 'Our Team',
+                'portfolio': 'Portfolio',
+                'timeline': 'History',
+                'analytics': 'Analytics',
+                'tools': 'Tools'
+            },
+            fr: {
+                'business-card': 'Carte d\'Affaires',
+                'products': 'Produits',
+                'team': 'Notre Équipe',
+                'portfolio': 'Portfolio',
+                'timeline': 'Historique',
+                'analytics': 'Analytiques',
+                'tools': 'Outils'
+            }
+        };
+
+        langButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.getAttribute('data-lang');
+                currentLanguage = lang;
+                
+                langButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Update navigation text
+                navLinks.forEach(link => {
+                    const section = link.getAttribute('data-section');
+                    link.textContent = translations[lang][section];
+                });
+            });
+        });
+
+        // QR Code Generator
+        function generateQRCode() {
+            const contactInfo = `
+BEGIN:VCARD
+VERSION:3.0
+FN:Daniel Gaudreault
+ORG:Capmatic
+TITLE:Senior Solutions Architect
+TEL:+15143220062
+EMAIL:dgaudreault@capmatic.com
+URL:http://www.capmatic.com
+ADR:;;12180 Albert-Hudon;Montreal;QC;H1G 3K7;Canada
+END:VCARD
+            `;
+            
+            QRCode.toCanvas(document.getElementById('qrcode'), contactInfo, {
+                width: 200,
+                margin: 2,
+                color: {
+                    dark: '#000000',
+                    light: '#FFFFFF'
+                }
+            }, function (error) {
+                if (error) console.error(error);
+            });
+        }
+
+        // Download QR Code
+        function downloadQRCode() {
+            const canvas = document.querySelector('#qrcode canvas');
+            const link = document.createElement('a');
+            link.download = 'capmatic-contact-qr.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // Download vCard
+        function downloadVCard() {
+            const vCard = `BEGIN:VCARD
+VERSION:3.0
+FN:Daniel Gaudreault
+ORG:Capmatic
+TITLE:Senior Solutions Architect
+TEL;TYPE=WORK,VOICE:+15143220062
+EMAIL;TYPE=PREF,INTERNET:dgaudreault@capmatic.com
+URL:http://www.capmatic.com
+ADR;TYPE=WORK,PREF:;;12180 Albert-Hudon;Montreal;QC;H1G 3K7;Canada
+NOTE:Packaging Machinery & Robotic Solutions
+END:VCARD`;
+
+            const blob = new Blob([vCard], { type: 'text/vcard' });
+            const link = document.createElement('a');
+            link.download = 'daniel-gaudreault.vcf';
+            link.href = window.URL.createObjectURL(blob);
+            link.click();
+        }
+
+        // Meeting Scheduler
+        function scheduleMeeting() {
+            const meetingUrl = 'https://calendly.com/dgaudreault-capmatic/30min';
+            window.open(meetingUrl, '_blank');
+        }
+
+        // Analytics Tracking
+        function trackSectionView(sectionName) {
+            // Simple analytics - in production, use Google Analytics
+            console.log(`Section viewed: ${sectionName}`);
+            localStorage.setItem(`viewed_${sectionName}`, new Date().toISOString());
+        }
+
+        // PWA Installation
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').style.display = 'flex';
+        });
+
+        document.getElementById('installBtn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    document.getElementById('installPrompt').style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            generateQRCode();
+            console.log('🚀 Capmatic Super Platform Loaded!');
+            
+            // Track initial view
+            trackSectionView('business-card');
+        });
+
+        // Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(() => console.log('Service Worker Registered'))
+                .catch(err => console.log('Service Worker Failed:', err));
+        }
+    </script>
+</body>
+</html>
